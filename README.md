@@ -81,6 +81,12 @@ Note: If `checkpoints/mini_llm.pt` already exists, you can use `agent.py` right 
 
 The training script automatically uses CUDA if a compatible NVIDIA GPU is available. Otherwise, it uses CPU mode.
 
+To check your CPU name, cores, and logical processors/threads in PowerShell:
+
+```powershell
+Get-CimInstance Win32_Processor | Select-Object Name,NumberOfCores,NumberOfLogicalProcessors
+```
+
 For an AMD Ryzen 3 PRO 2200G with 32GB RAM, the project should run in CPU mode. Training will work, but it can take longer than training on a GPU.
 
 Recommended CPU settings for AMD Ryzen 3 PRO 2200G with 32GB RAM:
@@ -132,6 +138,31 @@ dropout = 0.1
 ```
 
 If the Intel Core i3 with 8GB RAM still feels too slow or runs out of memory, reduce `batch_size` to `4`.
+
+Recommended CPU settings for an Intel Core 3 N355 with 8 cores / 8 logical processors:
+
+```python
+batch_size = 12
+block_size = 128
+max_iters = 4000
+eval_interval = 500
+learning_rate = 3e-4
+eval_iters = 10
+
+n_embd = 128
+n_head = 4
+n_layer = 4
+dropout = 0.1
+```
+
+If the Intel Core 3 N355 machine has 16GB RAM or more and training speed is acceptable, you can use:
+
+```python
+batch_size = 16
+max_iters = 5000
+```
+
+If training becomes too slow or the laptop gets too hot, reduce `batch_size` to `8`.
 
 These values are found in `train.py` inside the `if device == "cpu":` section.
 
